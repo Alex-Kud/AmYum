@@ -7,17 +7,13 @@ physics.start()
 
 -- Контент перед визуализацией сцены, все графические компоненты, аудио компоненты
 function scene:create( event )
+    -- Генерация подарков
+    local spawnGiftTimer = timer.performWithDelay (2000, spawn, 0, "giftTimer")
+    spawnGiftTimer.params = { img = "img/gift.png", id = "gift" }
+    -- Генерация мороженного
+    local spawnGiftTimer = timer.performWithDelay (3000, spawn, 0, "lifeTimer")
+    spawnGiftTimer.params = { img = "img/life.png", id = "life" }
 
-
-    function spawnC(img, id)
-        local newObject = display.newImageRect(img, 40, 40)
-        newObject.x = math.random(10, 310)
-        newObject.y = -100
-        newObject.Id = id
-        physics.addBody(newObject, "dynamic", {radius = 10, isSensor = true})
-    end
-
-    local spawnGiftTimer = timer.performWithDelay (1000, spawnC("img/gift.png", "gift"), 5)
     local score = 0
     local lives = 5
     local sceneGroup = self.view
@@ -50,15 +46,49 @@ function scene:create( event )
     local gifts = display.newImage(sceneGroup, "img/gift.png", 20, 5)
     gifts.height = 30
     gifts.width = 30
-    display.newText(sceneGroup, score, 57, 5, "Helvatic", 26)
+    local giftsText = display.newText(sceneGroup, score, 57, 5, "Helvatica", 26)
 
     -- Подарки (очки)
     local livesImg = display.newImage(sceneGroup, "img/life.png", 300, 0)
     livesImg.height = 30
     livesImg.width = 30
-    display.newText(sceneGroup, lives, 257, 5, "Helvatic", 26)
+    local livesText = display.newText(sceneGroup, lives, 257, 5, "Helvatica", 26)
 
-    --spawn(img, id)
+    -- Обработка столкновений
+    local function CollisionHandling (event)
+        if(event.phase == "began") then
+            local obj1 = event.object1
+            local obj2 = event.object2
+            -- Столкновение с подарком
+            if (obj1.Id == "ded" and obj2.Id == "gift") then
+                score = score + 1
+                giftsText.text = score
+                display.remove(obj2)
+            end
+            -- Столкновение с мороженным
+            if (obj1.Id == "ded" and obj2.Id == "life") then
+                lives = lives + 1
+                livesText.text = lives
+                display.remove(obj2)
+            end
+
+
+
+
+
+        end
+    end
+    Runtime:addEventListener("collision", CollisionHandling)
+
+
+
+
+
+
+
+
+
+
 
     MenuLevel1 = generationButton ("В меню", "menu")
     MenuLevel1.width = 150
@@ -78,6 +108,8 @@ end
 
 -- вызывется при сворачивании или закрытии сцены: снять прослушиватели, остановить физику
 function scene:hide( event )   
+    timer.cancel("giftTimer")
+    timer.cancel("lifeTimer")
     if (event.phase == "did") then --когда сцена уже закрыта
         composer.removeScene("level1")
     end

@@ -18,10 +18,11 @@ function generationButton(text, scene)
     return Button
 end
 
-function spawn(img, id)
-    local newObject = display.newImageRect(img, 40, 40)
-    newObject.x = math.random(10, 330)
-    newObject.y = -200
-    newObject.Id = id
+function spawn( event )
+    local params = event.source.params
+    local newObject = display.newImageRect(params.img, 40, 40)
+    newObject.x = math.random(10, 310)
+    newObject.y = -100
+    newObject.Id = params.id
     physics.addBody(newObject, "dynamic", {radius = 10, isSensor = true})
 end
