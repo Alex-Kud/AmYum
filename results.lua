@@ -6,21 +6,28 @@ local genButton = require "myFunctions"
 -- контент перед визуализацией сцены, все графические компоненты, аудио компоненты
 function scene:create( event )
     local sceneGroup = self.view
-    display.setDefault("background", 1, 0, 0)
+    local background = display.newImageRect(sceneGroup,"img/BG04.png", 960, 590)
+    background.x = display.contentCenterX
+    background.y = display.contentCenterY
 
-    --textbox и его параметры
-    local BestLevels = native.newTextBox(160, 80, 250, 150)
-    BestLevels.font = native.newFont("Helvetica", 20)--шрифт
-    BestLevels:setTextColor(0, 0, 0)--цвет шрифта
-    BestLevels.text = "Лучшие игры\n1 уровень - "..bestLevel1.."\n".."2 уровень - "..bestLevel2.."\n".."3 уровень - "..bestLevel3
-    BestLevels.isEditable = false--разрешение на редактирование поляя
+    local backgroundText = display.newImage(sceneGroup, "img/BGR3.png", 160, 90)
+    backgroundText.height = 210
+    backgroundText.width = 210
+
+    local Text1 = display.newText("Лучшие игры:", 160, 20, "Helvetica", 30)
+    local Text2 = display.newText("1 уровень - "..bestLevel1, 160, 60, "Helvetica", 30)
+    local Text3 = display.newText("2 уровень - "..bestLevel2, 160, 100, "Helvetica", 30)
+    local Text4 = display.newText("3 уровень - "..bestLevel3, 160, 140, "Helvetica", 30)
 
     MenuLevel3 = generationButton ("В меню", "mainMenu")
     MenuLevel3.x = 150
-    MenuLevel3.y = 250
+    MenuLevel3.y = 400
 
     sceneGroup:insert(MenuLevel3)--добавление объектов в сцену
-    sceneGroup:insert (BestLevels)
+    sceneGroup:insert(Text1)--добавление объектов в сцену
+    sceneGroup:insert(Text2)--добавление объектов в сцену
+    sceneGroup:insert(Text3)--добавление объектов в сцену
+    sceneGroup:insert(Text4)--добавление объектов в сцену
 end
 
 -- визуализация сцены, события при отображении и работы сцены
@@ -34,6 +41,7 @@ end
 -- вызывется при сворачивании или закрытии сцены: снять прослушиватели, остановить физику
 function scene:hide( event )   
     if (event.phase == "did") then --когда сцена уже закрыта
+        display.remove(Text1)
         composer.removeScene("results")
     end
 end

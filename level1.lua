@@ -22,7 +22,7 @@ function scene:create( event )
     local lives = 2 -- Количество жизней
     print("Create: " .. lives)
     local sceneGroup = self.view
-    cost = self.view
+
     local background = display.newImageRect(sceneGroup,"img/BG02.png", 960, 590)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
@@ -88,14 +88,8 @@ function scene:create( event )
                 livesText.text = lives
                 display.remove(obj2)
             end
-            print ("Первый if: " .. lives)
 
             if (lives == 0) then
-                --sceneGroup = cost
-                if (sceneGroup == nil) then
-                    print("FFFFFFF")
-                end
-                print ("Второй if: " .. lives)
                 display.remove(obj1)
                 timer.cancel("giftTimer")
                 timer.cancel("lifeTimer")
@@ -108,7 +102,7 @@ function scene:create( event )
                 gameOverBack:setFillColor(0)
                 gameOverBack.alpha = 0.5
 
-                local gameOverText1 = display.newText( sceneGroup, "Вы проиграли", 100, 200, "Helvetica", 32 )
+                local gameOverText1 = display.newText( sceneGroup, "Вы проиграли :(", 100, 200, "Helvetica", 32 )
                 gameOverText1.x = display.contentCenterX
                 gameOverText1.y = 150
                 gameOverText1:setFillColor( 1, 1, 1 )
@@ -120,40 +114,25 @@ function scene:create( event )
                     width = 180,
                     height = 70,
                     defaultFile = "img/button.png",
-                    label = "В меню",
+                    label = "Меню",
                     fontSize = 24,
                     labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1, 0.5 } },
-                    --onEvent = onPlayAgainTouch
                     onRelease = function() composer.gotoScene("mainMenu", "fade") end
                 }
                 
-                --generationButton("Меню", "mainMenu")
                 playAgain.x = display.contentCenterX
                 playAgain.y = gameOverText2.y + 100
                 sceneGroup:insert(playAgain)
                 if (score > bestLevel1) then
                     bestLevel1 = score
                 end
-                --lives = 2
-                --cost = self.view
-                --table.insert(sceneGroup,playAgain)
                 return sceneGroup
             end
         end
     end
     Runtime:addEventListener("collision", CollisionHandling)
-
-
-
-
-
-
-
-
-
-
-
-    MenuLevel1 = generationButton ("В меню", "menu")
+    
+    MenuLevel1 = generationButton ("Меню", "menu")
     MenuLevel1.width = 150
     MenuLevel1.x = 160
     MenuLevel1.y = 0

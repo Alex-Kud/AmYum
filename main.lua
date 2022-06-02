@@ -7,4 +7,4 @@
 local composer = require("composer")
 -- Переход к сцене
 --composer.gotoScene("mainMenu")
-composer.gotoScene("level1")
+composer.gotoScene("results")

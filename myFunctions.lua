@@ -3,7 +3,6 @@ local composer = require("composer")
 bestLevel1 = 0
 bestLevel2 = 0
 bestLevel3 = 0
-cost = nil
 
 function generationButton(text, scene)
     local widget = require "widget"
@@ -21,7 +20,7 @@ end
 
 function spawn( event )
     local params = event.source.params
-    local newObject = display.newImageRect(params.img, 40, 40)
+    local newObject = display.newImageRect(params.img, 40, 40, "ob")
     newObject.x = math.random(10, 310)
     newObject.y = -100
     newObject.Id = params.id
