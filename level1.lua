@@ -8,6 +8,11 @@ physics.start()
 
 -- Контент перед визуализацией сцены, все графические компоненты, аудио компоненты
 function scene:create( event )
+    -- Аудиофайлы
+    local audioBomb = audio.loadSound( "music/bomb.mp3" )
+    local audioGift = audio.loadSound( "music/gift.mp3" )
+    local audioLife = audio.loadSound( "music/life.mp3" )
+
     -- Генерация подарков
     local spawnGiftTimer = timer.performWithDelay (2000, spawn, 0, "giftTimer")
     spawnGiftTimer.params = { img = "img/gift.png", id = "gift" }
@@ -60,11 +65,6 @@ function scene:create( event )
     livesImg.width = 30
     local livesText = display.newText(sceneGroup, lives, 257, 5, "Helvetica", 26)
 
-    local function onPlayAgainTouch()
-        composer.gotoScene("mainMenu", "fade") -- возврат в меню
-    end
-
-
     -- Обработка столкновений
     CollisionHandling = function(event)
         if (event.phase == "began") then
@@ -72,18 +72,21 @@ function scene:create( event )
             local obj2 = event.object2
             -- Столкновение с подарком
             if (obj1.Id == "ded" and obj2.Id == "gift") then
+                audio.play(audioGift)
                 score = score + 1
                 giftsText.text = score
                 display.remove(obj2)
             end
             -- Столкновение с мороженным
             if (obj1.Id == "ded" and obj2.Id == "life") then
+                audio.play(audioLife)
                 lives = lives + 1
                 livesText.text = lives
                 display.remove(obj2)
             end
             -- Столкновение с сосульками
             if (obj1.Id == "ded" and obj2.Id == "death") then
+                audio.play(audioBomb)
                 lives = lives - 1
                 livesText.text = lives
                 display.remove(obj2)
