@@ -10,12 +10,15 @@ function scene:create( event )
     -- Генерация подарков
     local spawnGiftTimer = timer.performWithDelay (2000, spawn, 0, "giftTimer")
     spawnGiftTimer.params = { img = "img/gift.png", id = "gift" }
-    -- Генерация мороженного
-    local spawnGiftTimer = timer.performWithDelay (3000, spawn, 0, "lifeTimer")
-    spawnGiftTimer.params = { img = "img/life.png", id = "life" }
-
-    local score = 0
-    local lives = 5
+    -- Генерация животворящего мороженного
+    local spawnLifeTimer = timer.performWithDelay (3000, spawn, 0, "lifeTimer")
+    spawnLifeTimer.params = { img = "img/life.png", id = "life" }
+    -- Генерация смертоносных сосулек
+    local spawnDeathTimer = timer.performWithDelay (3000, spawn, 0, "deathTimer")
+    spawnDeathTimer.params = { img = "img/death.png", id = "death" }
+    
+    local score = 0 -- Количество подарков
+    local lives = 2 -- Количество жизней
     local sceneGroup = self.view
     local background = display.newImageRect(sceneGroup,"img/BG02.png", 960, 590)
     background.x = display.contentCenterX
@@ -48,7 +51,7 @@ function scene:create( event )
     gifts.width = 30
     local giftsText = display.newText(sceneGroup, score, 57, 5, "Helvatica", 26)
 
-    -- Подарки (очки)
+    -- Мороженки (жизни)
     local livesImg = display.newImage(sceneGroup, "img/life.png", 300, 0)
     livesImg.height = 30
     livesImg.width = 30
@@ -71,11 +74,39 @@ function scene:create( event )
                 livesText.text = lives
                 display.remove(obj2)
             end
+            -- Столкновение с сосульками
+            if (obj1.Id == "ded" and obj2.Id == "death") then
+                lives = lives - 1
+                livesText.text = lives
+                display.remove(obj2)
+            end
+            if (lives == 0) then
+                display.remove(obj1)
+                timer.cancel("giftTimer")
+                timer.cancel("lifeTimer")
+                timer.cancel("deathTimer")
+                display.remove(countText)
+                display.remove(lifeText)
+                
+                local gameOverBack = display.newRect(sceneGroup, 0, 0, display.actualContentWidth, display.actualContentHeight)
+                gameOverBack.x = display.contentCenterX
+                gameOverBack.y = display.contentCenterY
+                gameOverBack:setFillColor(0)
+                gameOverBack.alpha = 0.5
 
-
-
-
-
+                local gameOverText1 = display.newText( sceneGroup, "Вы проиграли", 100, 200, "Helvatica", 32 )
+                gameOverText1.x = display.contentCenterX
+                gameOverText1.y = 150
+                gameOverText1:setFillColor( 1, 1, 1 )
+                local gameOverText2 = display.newText( sceneGroup, "Ваш счет: " .. score, 100, 200, "Helvatica", 32 )
+                gameOverText2.x = display.contentCenterX
+                gameOverText2.y = 220
+                gameOverText2:setFillColor( 1, 1, 1 )
+                local playAgain = generationButton("Меню", "mainMenu")
+                playAgain.x = display.contentCenterX
+                playAgain.y = gameOverText2.y + 100
+                sceneGroup:insert(playAgain)
+            end
         end
     end
     Runtime:addEventListener("collision", CollisionHandling)
@@ -110,7 +141,9 @@ end
 function scene:hide( event )   
     timer.cancel("giftTimer")
     timer.cancel("lifeTimer")
+    timer.cancel("deathTimer")
     if (event.phase == "did") then --когда сцена уже закрыта
+        display.remove(playAgain)
         composer.removeScene("level1")
     end
 end
