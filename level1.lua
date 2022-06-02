@@ -3,6 +3,7 @@ local composer = require("composer")
 local scene = composer.newScene()-- объявление сцены
 local genButton = require "myFunctions"
 local physics = require ("physics")
+local widget = require( "widget" )
 physics.start()
 
 -- Контент перед визуализацией сцены, все графические компоненты, аудио компоненты
@@ -57,6 +58,11 @@ function scene:create( event )
     livesImg.width = 30
     local livesText = display.newText(sceneGroup, lives, 257, 5, "Helvatica", 26)
 
+    local function onPlayAgainTouch()
+        composer.gotoScene("mainMenu", "fade") -- возврат в меню
+    end
+
+
     -- Обработка столкновений
     local function CollisionHandling (event)
         if(event.phase == "began") then
@@ -80,14 +86,19 @@ function scene:create( event )
                 livesText.text = lives
                 display.remove(obj2)
             end
+            print ("Первый if: " .. lives)
+
             if (lives == 0) then
+                if (sceneGroup == nil) then
+                    print("FFFFFFF")
+                end
+                print ("Второй if: " .. lives)
                 display.remove(obj1)
                 timer.cancel("giftTimer")
                 timer.cancel("lifeTimer")
                 timer.cancel("deathTimer")
                 display.remove(countText)
                 display.remove(lifeText)
-                
                 local gameOverBack = display.newRect(sceneGroup, 0, 0, display.actualContentWidth, display.actualContentHeight)
                 gameOverBack.x = display.contentCenterX
                 gameOverBack.y = display.contentCenterY
@@ -102,10 +113,27 @@ function scene:create( event )
                 gameOverText2.x = display.contentCenterX
                 gameOverText2.y = 220
                 gameOverText2:setFillColor( 1, 1, 1 )
-                local playAgain = generationButton("Меню", "mainMenu")
+                local playAgain = widget.newButton{
+                    width = 180,
+                    height = 70,
+                    defaultFile = "img/button.png",
+                    label = "В меню",
+                    fontSize = 24,
+                    labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1, 0.5 } },
+                    onEvent = onPlayAgainTouch
+                 }
+                
+                --generationButton("Меню", "mainMenu")
                 playAgain.x = display.contentCenterX
                 playAgain.y = gameOverText2.y + 100
                 sceneGroup:insert(playAgain)
+                if (score > bestLevel1) then
+                    bestLevel1 = score
+                end
+                lives = 2
+                sceneGroup = self.view
+                --table.insert(sceneGroup,playAgain)
+                return sceneGroup
             end
         end
     end
@@ -150,6 +178,7 @@ end
 
 -- очищение сцены из ОП
 function scene:destroy( event )
+    
 end
 
 -- Listener setup
