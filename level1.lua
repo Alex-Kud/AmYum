@@ -14,17 +14,17 @@ function scene:create( event )
     local audioLife = audio.loadSound( "music/life.mp3" )
 
     -- Генерация подарков
-    local spawnGiftTimer = timer.performWithDelay (2000, spawn, 0, "giftTimer")
+    local spawnGiftTimer = timer.performWithDelay (1200, spawn, 0, "giftTimer")
     spawnGiftTimer.params = { img = "img/gift.png", id = "gift" }
     -- Генерация животворящего мороженного
-    local spawnLifeTimer = timer.performWithDelay (3000, spawn, 0, "lifeTimer")
+    local spawnLifeTimer = timer.performWithDelay (6000, spawn, 0, "lifeTimer")
     spawnLifeTimer.params = { img = "img/life.png", id = "life" }
     -- Генерация смертоносных сосулек
-    local spawnDeathTimer = timer.performWithDelay (3000, spawn, 0, "deathTimer")
+    local spawnDeathTimer = timer.performWithDelay (1800, spawn, 0, "deathTimer")
     spawnDeathTimer.params = { img = "img/death.png", id = "death" }
     
     local score = 0 -- Количество подарков
-    local lives = 2 -- Количество жизней
+    local lives = 5 -- Количество жизней
     print("Create: " .. lives)
     local sceneGroup = self.view
 
