@@ -3,6 +3,7 @@ local composer = require("composer")
 bestLevel1 = 0
 bestLevel2 = 0
 bestLevel3 = 0
+cost = nil
 
 function generationButton(text, scene)
     local widget = require "widget"

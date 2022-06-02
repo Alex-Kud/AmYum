@@ -20,7 +20,9 @@ function scene:create( event )
     
     local score = 0 -- Количество подарков
     local lives = 2 -- Количество жизней
+    print("Create: " .. lives)
     local sceneGroup = self.view
+    cost = self.view
     local background = display.newImageRect(sceneGroup,"img/BG02.png", 960, 590)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
@@ -50,13 +52,13 @@ function scene:create( event )
     local gifts = display.newImage(sceneGroup, "img/gift.png", 20, 5)
     gifts.height = 30
     gifts.width = 30
-    local giftsText = display.newText(sceneGroup, score, 57, 5, "Helvatica", 26)
+    local giftsText = display.newText(sceneGroup, score, 57, 5, "Helvetica", 26)
 
     -- Мороженки (жизни)
     local livesImg = display.newImage(sceneGroup, "img/life.png", 300, 0)
     livesImg.height = 30
     livesImg.width = 30
-    local livesText = display.newText(sceneGroup, lives, 257, 5, "Helvatica", 26)
+    local livesText = display.newText(sceneGroup, lives, 257, 5, "Helvetica", 26)
 
     local function onPlayAgainTouch()
         composer.gotoScene("mainMenu", "fade") -- возврат в меню
@@ -64,8 +66,8 @@ function scene:create( event )
 
 
     -- Обработка столкновений
-    local function CollisionHandling (event)
-        if(event.phase == "began") then
+    CollisionHandling = function(event)
+        if (event.phase == "began") then
             local obj1 = event.object1
             local obj2 = event.object2
             -- Столкновение с подарком
@@ -89,6 +91,7 @@ function scene:create( event )
             print ("Первый if: " .. lives)
 
             if (lives == 0) then
+                --sceneGroup = cost
                 if (sceneGroup == nil) then
                     print("FFFFFFF")
                 end
@@ -105,23 +108,24 @@ function scene:create( event )
                 gameOverBack:setFillColor(0)
                 gameOverBack.alpha = 0.5
 
-                local gameOverText1 = display.newText( sceneGroup, "Вы проиграли", 100, 200, "Helvatica", 32 )
+                local gameOverText1 = display.newText( sceneGroup, "Вы проиграли", 100, 200, "Helvetica", 32 )
                 gameOverText1.x = display.contentCenterX
                 gameOverText1.y = 150
                 gameOverText1:setFillColor( 1, 1, 1 )
-                local gameOverText2 = display.newText( sceneGroup, "Ваш счет: " .. score, 100, 200, "Helvatica", 32 )
+                local gameOverText2 = display.newText( sceneGroup, "Ваш счет: " .. score, 100, 200, "Helvetica", 32 )
                 gameOverText2.x = display.contentCenterX
                 gameOverText2.y = 220
                 gameOverText2:setFillColor( 1, 1, 1 )
-                local playAgain = widget.newButton{
+                local playAgain = widget.newButton {
                     width = 180,
                     height = 70,
                     defaultFile = "img/button.png",
                     label = "В меню",
                     fontSize = 24,
                     labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1, 0.5 } },
-                    onEvent = onPlayAgainTouch
-                 }
+                    --onEvent = onPlayAgainTouch
+                    onRelease = function() composer.gotoScene("mainMenu", "fade") end
+                }
                 
                 --generationButton("Меню", "mainMenu")
                 playAgain.x = display.contentCenterX
@@ -130,8 +134,8 @@ function scene:create( event )
                 if (score > bestLevel1) then
                     bestLevel1 = score
                 end
-                lives = 2
-                sceneGroup = self.view
+                --lives = 2
+                --cost = self.view
                 --table.insert(sceneGroup,playAgain)
                 return sceneGroup
             end
@@ -170,6 +174,8 @@ function scene:hide( event )
     timer.cancel("giftTimer")
     timer.cancel("lifeTimer")
     timer.cancel("deathTimer")
+    Runtime:removeEventListener("collision", CollisionHandling)
+
     if (event.phase == "did") then --когда сцена уже закрыта
         display.remove(playAgain)
         composer.removeScene("level1")
