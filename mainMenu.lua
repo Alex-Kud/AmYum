@@ -5,7 +5,7 @@ local genButton = require "myFunctions"
 -- контент перед визуализацией сцены, все графические компоненты, аудио компоненты
 function scene:create( event )
     local sceneGroup = self.view
-    local background = display.newImageRect(sceneGroup,"/img/BG03.png", 960, 590)
+    local background = display.newImageRect(sceneGroup,"img/BG03.png", 960, 590)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 

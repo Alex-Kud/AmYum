@@ -14,8 +14,11 @@ function scene:create( event )
     local audioLife = audio.loadSound( "music/life.mp3" )
 
     -- Генерация подарков
-    local spawnGiftTimer = timer.performWithDelay (1600, spawn, 0, "giftTimer")
+    local spawnGiftTimer = timer.performWithDelay (2700, spawn, 0, "giftTimer")
     spawnGiftTimer.params = { img = "img/gift.png", id = "gift" }
+    -- Генерация мешка подарков
+    local spawnGift2Timer = timer.performWithDelay (5700, spawn, 0, "giftTimer")
+    spawnGift2Timer.params = { img = "img/gift2.png", id = "gift2" }
     -- Генерация животворящего мороженного
     local spawnLifeTimer = timer.performWithDelay (10000, spawn, 0, "lifeTimer")
     spawnLifeTimer.params = { img = "img/life.png", id = "life" }
@@ -74,6 +77,13 @@ function scene:create( event )
             if (obj1.Id == "ded" and obj2.Id == "gift") then
                 audio.play(audioGift)
                 score = score + 1
+                giftsText.text = score
+                display.remove(obj2)
+            end
+            -- Столкновение с мешком подарков
+            if (obj1.Id == "ded" and obj2.Id == "gift2") then
+                audio.play(audioGift)
+                score = score + 3
                 giftsText.text = score
                 display.remove(obj2)
             end

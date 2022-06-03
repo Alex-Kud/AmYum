@@ -73,7 +73,7 @@ function scene:create( event )
             -- Столкновение с подарком
             if (obj1.Id == "ded" and obj2.Id == "gift") then
                 audio.play(audioGift)
-                score = score + 1
+                score = score + 2
                 giftsText.text = score
                 display.remove(obj2)
             end

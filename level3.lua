@@ -14,13 +14,19 @@ function scene:create( event )
     local audioLife = audio.loadSound( "music/life.mp3" )
 
     -- Генерация подарков
-    local spawnGiftTimer = timer.performWithDelay (500, spawn, 0, "giftTimer")
+    local spawnGiftTimer = timer.performWithDelay (700, spawn, 0, "giftTimer")
     spawnGiftTimer.params = { img = "img/gift.png", id = "gift" }
+    -- Генерация мешка подарков
+    local spawnGift2Timer = timer.performWithDelay (2300, spawn, 0, "giftTimer")
+    spawnGift2Timer.params = { img = "img/gift2.png", id = "gift2" }
+    -- Генерация саней подарков
+    local spawnGift3Timer = timer.performWithDelay (25000, spawn, 0, "giftTimer")
+    spawnGift3Timer.params = { img = "img/gift3.png", id = "gift3" }
     -- Генерация животворящего мороженного
     local spawnLifeTimer = timer.performWithDelay (10000, spawn, 0, "lifeTimer")
     spawnLifeTimer.params = { img = "img/life.png", id = "life" }
     -- Генерация смертоносных сосулек
-    local spawnDeathTimer = timer.performWithDelay (375, spawn, 0, "deathTimer")
+    local spawnDeathTimer = timer.performWithDelay (200, spawn, 0, "deathTimer")
     spawnDeathTimer.params = { img = "img/death.png", id = "death" }
     
     local score = 0 -- Количество подарков
@@ -75,6 +81,20 @@ function scene:create( event )
             if (obj1.Id == "ded" and obj2.Id == "gift") then
                 audio.play(audioGift)
                 score = score + 1
+                giftsText.text = score
+                display.remove(obj2)
+            end
+            -- Столкновение с мешком подарков
+            if (obj1.Id == "ded" and obj2.Id == "gift2") then
+                audio.play(audioGift)
+                score = score + 3
+                giftsText.text = score
+                display.remove(obj2)
+            end
+            -- Столкновение с санями подарков
+            if (obj1.Id == "ded" and obj2.Id == "gift3") then
+                audio.play(audioGift)
+                score = score + 15
                 giftsText.text = score
                 display.remove(obj2)
             end
